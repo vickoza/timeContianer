@@ -5,7 +5,40 @@ VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timeContianer", "timeContianer\timeContianer.vcxitems", "{A71692EB-4859-41EC-AB42-409DE9E96CAD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ledgerTest", "ledgerTest\ledgerTest.vcxproj", "{CAD3C98A-BD5F-4A8D-B460-A9319678E592}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		timeContianer\timeContianer.vcxitems*{570cb9a5-9dd6-40d2-b5fc-cc57b84c5420}*SharedItemsImports = 4
+		timeContianer\timeContianer.vcxitems*{a71692eb-4859-41ec-ab42-409de9e96cad}*SharedItemsImports = 9
+		timeContianer\timeContianer.vcxitems*{cad3c98a-bd5f-4a8d-b460-a9319678e592}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Debug|x64.ActiveCfg = Debug|x64
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Debug|x64.Build.0 = Debug|x64
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Debug|x86.ActiveCfg = Debug|Win32
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Debug|x86.Build.0 = Debug|Win32
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Release|x64.ActiveCfg = Release|x64
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Release|x64.Build.0 = Release|x64
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Release|x86.ActiveCfg = Release|Win32
+		{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}.Release|x86.Build.0 = Release|Win32
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Debug|x64.ActiveCfg = Debug|x64
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Debug|x64.Build.0 = Debug|x64
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Debug|x86.ActiveCfg = Debug|Win32
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Debug|x86.Build.0 = Debug|Win32
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Release|x64.ActiveCfg = Release|x64
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Release|x64.Build.0 = Release|x64
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Release|x86.ActiveCfg = Release|Win32
+		{CAD3C98A-BD5F-4A8D-B460-A9319678E592}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
