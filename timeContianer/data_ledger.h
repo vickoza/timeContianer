@@ -89,7 +89,7 @@ private:
 	Container dataPoints;
 };
 
-template <typename T, typename S, typename U = std::chrono::steady_clock, typename V = U::timepoint, typename Container = std::deque<std::pair<S, V>>>
+template <typename T, typename S, typename U = std::chrono::steady_clock, typename V = std::chrono::time_point<U>, typename Container = std::deque<std::pair<S, V>>>
 class state_data_ledger
 {
 	//static_assert(is_clock<U>, "U must be a clocktype");
