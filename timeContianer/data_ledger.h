@@ -23,16 +23,18 @@ namespace detail {
 template<class T>
 struct is_clock : detail::is_clock_impl<T> {};
 
-template <typename T, typename U = std::chrono::steady_clock, typename V = U::timepoint, typename Container = std::deque<std::pair<T, V>>>
+template <typename T, typename U = std::chrono::steady_clock, typename V = std::chrono::time_point<U>, typename Container = std::deque<std::pair<T, V>>>
 class data_ledger
 {
 	static_assert(std::is_arithmetic<T>::value || is_complex<T>::value, "T must be a numeric value");
-	static_assert(is_clock<U>, "U must be a clocktype");
+	//static_assert(is_clock<U>, "U must be a clocktype");
 public:
 	data_ledger() = delete;
 	data_ledger(const data_ledger&) = delete;
 	data_ledger(data_ledger&& old) : intialState(std::move(old.intialState)), currentState(std::move(old.currentState)), dataPoints(std::move(old.dataPoints)) {}
 	data_ledger(T intSt) : intialState(intSt), currentState(intSt){}
+	template <typename... Args>
+	data_ledger(Args&&... args) : intialState(std::forward<Args>(args)...), currentState(intialState) {}
 	void update(const T& val)
 	{
 		dataPoints.emplace_back(val, U::now());
@@ -90,12 +92,20 @@ private:
 template <typename T, typename S, typename U = std::chrono::steady_clock, typename V = U::timepoint, typename Container = std::deque<std::pair<S, V>>>
 class state_data_ledger
 {
-	static_assert(is_clock<U>, "U must be a clocktype");
+	//static_assert(is_clock<U>, "U must be a clocktype");
 public:
 	state_data_ledger() = delete;
 	state_data_ledger(const state_data_ledger&) = delete;
+	template <typename... Args>
+	state_data_ledger(std::function<void(T&, const S&)>& alterFunction, Args&&... args): intialState(std::forward<Args>(args)...), currentState(intialState), fun(std::move(alterFunction)) {}
 	state_data_ledger(state_data_ledger&& old) : intialState(std::move(old.intialState)), currentState(std::move(old.currentState)), dataPoints(std::move(old.dataPoints)), fun(std::move(old.fun)) {}
 	state_data_ledger(T intSt, std::function<void(T&, const S&)>& alterFunction) : intialState(intSt), currentState(intSt), fun(std::move(alterFunction)){}
+	template <typename... Args>
+	void update(Args&&... args )
+	{
+		dataPoints.emplace_back(std::forward<Args>(args)..., U::now());
+		fun(currentState, dataPoints.first);
+	}
 	void update(const S& val)
 	{
 		dataPoints.emplace_back(val, U::now());
