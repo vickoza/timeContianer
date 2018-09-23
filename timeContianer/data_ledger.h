@@ -80,7 +80,7 @@ public:
 	}
 	bool validate() const
 	{
-		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.first > y.first; });
+		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.second > y.second; });
 		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [](auto a, auto pr) { return a + pr.first; })) && i2 == dataPoints.end();
 	}
 private:
@@ -150,7 +150,7 @@ public:
 	}
 	bool validate() const
 	{
-		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.first > y.first; });
+		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.second > y.second; });
 		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [](auto a, auto pr) { fun(a, pr.first); return a; })) && i2 == dataPoints.end();
 	}
 private:
