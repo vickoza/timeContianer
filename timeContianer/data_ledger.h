@@ -7,6 +7,7 @@
 #include <utility>
 #include <type_traits>
 #include <functional>
+#include <iterator>
 
 template<class T> struct is_complex : std::false_type {};
 template<class T> struct is_complex<std::complex<T>> : std::true_type {};
@@ -83,6 +84,10 @@ public:
 		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.second > y.second; });
 		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [](auto a, auto pr) { return a + pr.first; })) && i2 == dataPoints.end();
 	}
+	auto begin() { return dataPoints.cbegin(); }
+	auto cbegin() { return dataPoints.cbegin(); }
+	auto end() { return dataPoints.cend(); }
+	auto cend() { return dataPoints.cend(); }
 private:
 	T intialState;
 	T currentState;
@@ -153,6 +158,11 @@ public:
 		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.second > y.second; });
 		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [](auto a, auto pr) { fun(a, pr.first); return a; })) && i2 == dataPoints.end();
 	}
+	auto begin() { return dataPoints.cbegin(); }
+	auto cbegin() { return dataPoints.cbegin(); }
+	auto end() { return dataPoints.cend(); }
+	auto cend() { return dataPoints.cend(); }
+
 private:
 	T intialState;
 	T currentState;
