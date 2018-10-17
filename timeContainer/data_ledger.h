@@ -156,7 +156,7 @@ public:
 	bool validate() const
 	{
 		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.second > y.second; });
-		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [](auto a, auto pr) { fun(a, pr.first); return a; })) && i2 == dataPoints.end();
+		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [&fun](auto a, auto pr) { fun(a, pr.first); return a; })) && i2 == dataPoints.end();
 	}
 	auto begin() { return dataPoints.cbegin(); }
 	auto cbegin() { return dataPoints.cbegin(); }
