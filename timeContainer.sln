@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29521.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{570CB9A5-9DD6-40D2-B5FC-CC57B84C5420}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ledgerTest", "ledgerTest\ledgerTest.vcxproj", "{CAD3C98A-BD5F-4A8D-B460-A9319678E592}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timeContainer", "timeContainer\timeContainer.vcxitems", "{A71692EB-4859-41EC-AB42-409DE9E96CAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{B425E71A-B862-4EC2-A539-8A8AB77A1833}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
