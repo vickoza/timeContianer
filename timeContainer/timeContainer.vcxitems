@@ -14,7 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)dataBlock.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)data_ledger.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)data_ledger_old.h" />
   </ItemGroup>
 </Project>
