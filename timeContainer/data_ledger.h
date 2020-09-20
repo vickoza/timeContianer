@@ -6,6 +6,7 @@
 #include <complex>
 #include <utility>
 #include <type_traits>
+#include <atomic>
 #include <functional>
 #include <iterator>
 #include <ranges>
@@ -14,14 +15,14 @@
 template<class T>
 concept Addable = requires (T a, T b)
 {
-	{ a + b }->T;
-	{ a += b }->T&;
+	{ a + b }->std::convertible_to<T>;
+	{ a += b }->std::convertible_to<T&>;
 };
 
 template<class T, class U, class V, class  Container>
 concept time_contianer = requires (T a, U, V v1, V v2, Container c)
 {
-	{U::now()}->V;
+	{U::now()}->std::convertible_to<V>;
 	v1 > v2;
 	//c.push_back(a, v1);
 	c.emplace_back(a, v1);
@@ -37,14 +38,16 @@ class data_ledger
 public:
 	data_ledger() = delete;
 	data_ledger(const data_ledger&) = delete;
-	data_ledger(data_ledger&& old) : intialState(std::move(old.intialState)), currentState(std::move(old.currentState)), dataPoints(std::move(old.dataPoints)) {}
-	data_ledger(T intSt) : intialState(intSt), currentState(intSt){}
+	data_ledger(data_ledger&& old) : intialState(std::move(old.intialState)), currentState(std::move(old.currentState)), dataPoints(std::move(old.dataPoints)) { }
+	data_ledger(T intSt) : intialState(intSt), currentState(intSt)  {}
 	template <typename... Args>
 	data_ledger(Args&&... args) : intialState(std::forward<Args>(args)...), currentState(intialState) {}
 	void update(const T& val)
 	{
+		while (lock.test_and_set(std::memory_order_acquire));
 		dataPoints.emplace_back(val, U::now());
 		currentState += val;
+		lock.clear(std::memory_order_release);
 	}
 
 	const T& getCurrent() const { return currentState;  }
@@ -53,19 +56,22 @@ public:
 	template<class Contianer1 = Container> //untestible except in live code
 	data_ledger<T, U, V, Contianer1> partition(const V& time)
 	{
+		
 		data_ledger<T, U, V, Contianer1> temp{ intialState };
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
+			while (lock.test_and_set(std::memory_order_acquire));
 			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState](const auto& pr)
 			{
-				if (pr.first > time)
+				if (pr.second > time)
 					return true;
 				temp.dataPoints.emplace_back(pr.first, pr.second);
 				intialState += pr.first;
 				temp.currentState += pr.first;
-
+				return false;
 			});
 			dataPoints.erase(dataPoints.begin(), iter);
+			lock.clear(std::memory_order_release);
 		}
 		return temp;
 	}
@@ -73,6 +79,7 @@ public:
 	template<class Contianer1 = Container>
 	data_ledger<T, U, V, Contianer1> partition(const long double& percentKeep)
 	{
+		while (lock.test_and_set(std::memory_order_acquire));
 		data_ledger<T, U, V, Contianer1> temp{ intialState };
 		auto value = (size_t)(((100.0 - percentKeep) / 100.0) * dataPoints.size());
 		auto iter = dataPoints.begin();
@@ -84,6 +91,7 @@ public:
 			++iter;
 		}
 		dataPoints.erase(dataPoints.begin(), iter);
+		lock.clear(std::memory_order_release);
 		return temp;
 	}
 	bool validate() const
@@ -99,6 +107,7 @@ private:
 	T intialState;
 	T currentState;
 	Container dataPoints;
+	std::atomic_flag lock;
 };
 
 template <typename T, typename S, typename U = std::chrono::steady_clock, typename V = std::chrono::time_point<U>, typename Container = std::deque<std::pair<S, V>>>  requires time_contianer<S, U, V, Container>
@@ -114,38 +123,45 @@ public:
 	template <typename... Args>
 	void update(Args&&... args )
 	{
+		while (lock.test_and_set(std::memory_order_acquire));
 		dataPoints.emplace_back(std::forward<Args>(args)..., U::now());
 		fun(currentState, dataPoints.back().first);
+		lock.clear(std::memory_order_release);
 	}
 	void update(const S& val)
 	{
+		while (lock.test_and_set(std::memory_order_acquire));
 		dataPoints.emplace_back(val, U::now());
 		fun(currentState, val);
+		lock.clear(std::memory_order_release);
 	}
 	const T& getCurrent() const { return currentState; }
 	const T& getIntial() const { return intialState; }
 
 	state_data_ledger partition(const V& time)
 	{
-		state_data_ledger temp{ intialState, fun };
+		state_data_ledger temp{ fun, intialState };
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
+			while (lock.test_and_set(std::memory_order_acquire));
 			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState](const auto& pr)
 			{
-				if (pr.first > time)
+				if (pr.second > time)
 					return true;
 				temp.dataPoints.emplace_back(pr.first, pr.second);
 				fun(intialState, pr.first);
 				fun(temp.currentState, pr.first);
-
+				return false;
 			});
 			dataPoints.erase(dataPoints.begin(), iter);
+			lock.clear(std::memory_order_release);
 		}
 		return temp;
 	}
 
 	state_data_ledger partition(const long double& percentKeep)
 	{
+		while (lock.test_and_set(std::memory_order_acquire));
 		state_data_ledger temp{ fun, intialState };
 		auto value = (size_t)(std::ceil(((100.0 - percentKeep) / 100.0) * dataPoints.size()));
 		auto iter = dataPoints.begin();
@@ -157,6 +173,7 @@ public:
 		}
 
 		dataPoints.erase(dataPoints.begin(), iter);
+		lock.clear(std::memory_order_release);
 		return temp;
 	}
 	bool validate() const
@@ -174,5 +191,6 @@ private:
 	T currentState;
 	Container dataPoints;
 	std::function<void(T&, const S&)> fun;
+	std::atomic_flag lock;
 };
 
