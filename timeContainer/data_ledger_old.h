@@ -68,7 +68,7 @@ public:
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
 			auto iter = dataPoints.begin();
-			for (auto i = decltype(value)0; i < value; ++i, ++iter)
+			for (auto i = (size_t)0; i < value; ++i, ++iter)
 			{
 				temp.dataPoints.emplace_back(iter->first, iter->second);
 				intialState += iter->first;
@@ -143,7 +143,7 @@ public:
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
 			auto iter = dataPoints.begin();
-			for (auto i = decltype(value)0; i < value; ++i, ++iter)
+			for (auto i = (size_t)0; i < value; ++i, ++iter)
 			{
 				temp.dataPoints.emplace_back(iter->first, iter->second);
 				fun(intialState, iter->first);
