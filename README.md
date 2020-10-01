@@ -6,5 +6,4 @@ There are two types of ledger a data ledger that simple works with numberic data
 # Todo
 
 Create containters the exist on networks for distribution
-Updates for concepts
-Write test for both the contianer and ledgers
+increase test for both the contianer and ledgers
