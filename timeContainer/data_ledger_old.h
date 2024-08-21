@@ -47,7 +47,7 @@ public:
 		data_ledger temp{ intialState };
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
-			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState](const auto& pr)
+			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState = this->intialState](const auto& pr)
 				{
 					if (pr.first > time)
 						return true;
@@ -122,7 +122,7 @@ public:
 		state_data_ledger temp{ intialState, fun };
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
-			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState](const auto& pr)
+			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState = this->intialState, &fun = this->fun](const auto& pr)
 				{
 					if (pr.first > time)
 						return true;
@@ -156,7 +156,7 @@ public:
 	bool validate() const
 	{
 		auto i2 = std::adjacent_find(dataPoints.begin(), dataPoints.end(), [](const auto& x, const auto& y) { return x.second > y.second; });
-		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [&fun](auto a, auto pr) { fun(a, pr.first); return a; })) && i2 == dataPoints.end();
+		return (currentState == std::accumulate(dataPoints.begin(), dataPoints.end(), intialState, [&fun = this->fun](auto a, auto pr) { fun(a, pr.first); return a; })) && i2 == dataPoints.end();
 	}
 	auto begin() { return dataPoints.cbegin(); }
 	auto cbegin() { return dataPoints.cbegin(); }

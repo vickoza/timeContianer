@@ -61,7 +61,7 @@ public:
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
 			while (lock.test_and_set(std::memory_order_acquire));
-			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState](const auto& pr)
+			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState = this->intialState](const auto& pr)
 			{
 				if (pr.second > time)
 					return true;
@@ -144,7 +144,7 @@ public:
 		if (!dataPoints.empty() && time > dataPoints.front())
 		{
 			while (lock.test_and_set(std::memory_order_acquire));
-			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState](const auto& pr)
+			auto iter = std::find_if(dataPoints.begin(), dataPoints.end(), [&temp, &time, &intialState = this->intialState, &fun = this->fun](const auto& pr)
 			{
 				if (pr.second > time)
 					return true;
